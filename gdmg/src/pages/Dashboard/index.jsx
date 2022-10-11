@@ -1,4 +1,3 @@
-import { Title } from "@mantine/core";
 import React from "react";
 import AppShellComponent from "../../components/AppShellComponent";
 

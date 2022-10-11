@@ -4,11 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ColorSchemeProvider, MantineProvider } from '@mantine/core';
-import { BrowserRouter as Router, Routes,Route, BrowserRouter } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Mail from './pages/Mail';
-import Analytics from './pages/Analytics';
-import { Calendar } from '@mantine/dates';
+import { BrowserRouter } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -17,14 +14,7 @@ root.render(
         <App />
       </ColorSchemeProvider>
     </MantineProvider>
-    <Routes>
-      <Route path='/' />
-      <Route path='/register' />
-      <Route path='/dashboard' element={<Dashboard />}/>
-      <Route path='/mail' element={<Mail/>}/>
-      <Route path='/analytics' element={<Analytics />}/>
-      <Route path='calendar' element={<Calendar />}/>
-    </Routes>
+   
   </BrowserRouter>
  
 );

@@ -1,4 +1,3 @@
-import { AppShell } from "@mantine/core";
 import React from "react";
 import AppShellComponent from "../../components/AppShellComponent";
 function Calendar() {
