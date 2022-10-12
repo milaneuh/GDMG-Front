@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <ColorSchemeProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </ColorSchemeProvider>
     </MantineProvider>
    

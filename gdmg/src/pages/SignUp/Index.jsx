@@ -1,5 +1,4 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -15,13 +14,13 @@ import {
   Select,
   Grid,
 } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import { connectUser } from '../../service/test';
 import PasswordValidator from 'password-validator';
 import * as EmailValidator from 'email-validator';
 
-export function AuthenticationForm(props) {
-  var passwordValidator = require('password-validator');
+import { useNavigate } from 'react-router-dom';
+
+export function SignUpForm(props) {
+const navigate = useNavigate();
   var schema = new PasswordValidator();
   schema
     .is().min(8)
@@ -32,7 +31,6 @@ export function AuthenticationForm(props) {
     .has().not().spaces();
 
     
-  const [type, toggle] = useToggle(['login', 'register']);
   const [searchValue, onSearchChange] = useState('');
   const form = useForm({
     initialValues: {
@@ -53,16 +51,8 @@ export function AuthenticationForm(props) {
     },
   });
  
-  const handleSubmit = (event) => {
-    form.isValid()
-    if(form.isValid()){
-      if(type == 'register'){
-        connectUser(type,form.values.name,form.values.surname,form.values.civilite,form.values.email,form.values.password,form.values.newsletter)
-      }else if(type == 'login'){
-        console.log('login')
-      }
-    }
-
+  const handleSubmit = async (event) => {
+     
   }
 
   return (
@@ -77,7 +67,6 @@ export function AuthenticationForm(props) {
         <Stack>
           <Grid>
             <Grid.Col span={6}>
-              {type === 'register' && (
                 <TextInput
                   required
                   label="Prénom"
@@ -87,10 +76,8 @@ export function AuthenticationForm(props) {
 
                   onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
                 />
-              )}
             </Grid.Col>
             <Grid.Col span={6}>
-              {type == 'register' && (
                 <TextInput
                 required
                 label="Nom"
@@ -99,10 +86,9 @@ export function AuthenticationForm(props) {
                 error={form.errors.surname && 'Votre nom est invalide'}
                 onChange={(event) => form.setFieldValue('surname', event.currentTarget.value)}
                 />
-              )}
+
             </Grid.Col>
           </Grid>
-          {type == 'register' && (
               <Select
               required
               label="Votre civilité"
@@ -116,8 +102,7 @@ export function AuthenticationForm(props) {
               nothingFound="No options"
               data={['Homme', 'Femme','Test']}
             />
-          )}
-       
+
             
           <TextInput
             required
@@ -138,20 +123,19 @@ export function AuthenticationForm(props) {
             error={form.errors.password && 'Le mot de passe est invalide'}
           />
 
-          {type === 'register' && (
             <Checkbox
               label="J'accepte les termes et les conditions de GDMG"
               checked={form.values.terms}
               onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             />
-          )}
-          {type === 'register' && (
+
+
             <Checkbox
               label="J'accepte de recevoir des nouvelles de GDMG"
               checked={form.values.newsletter}
               onChange={(event) => form.setFieldValue('newsletter', event.currentTarget.checked)}
             />
-          )}
+
         </Stack>
 
         <Group position="apart" mt="xl">
@@ -159,19 +143,15 @@ export function AuthenticationForm(props) {
             component="button"
             type="button"
             color="dimmed"
-            onClick={() => toggle()}
+            onClick={() => navigate('/')}
             size="xs"
           >
-            {type === 'register'
-              ? 'Déjà un compte ? Connectez-vous'
-              : "Pas de compte ? Inscrivez-vous"}
+            Déjà un compte ? Connectez-vous    
           </Anchor>
           <Button
             disabled={form.isDirty() ? false : true} 
-            //</Group>onClick={(e) => { 
-      
-             //}}
-            type="submit">{upperFirst(type)}
+            type="submit">
+            Register
           </Button>
         </Group>
       </form>
