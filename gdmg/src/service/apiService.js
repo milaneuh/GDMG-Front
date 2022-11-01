@@ -1,40 +1,57 @@
 import axios from "axios";
-import { API_URL, LOGIN_URL } from "../utils/constantesutils";
+import TokenService from "./jwt/tokenService";
+import { API_URL } from "../utils/constantesutils";
 
-
-class ApiService {
-
-
-  async login(mail, password) {
-      let res = null 
-      axios
-      .post(API_URL + LOGIN_URL, { mail, password })
-      .then((response) => {
-        console.log(response)
-       if (response.data.accessToken) {
-          console.log(response.data.accessToken)
-          //localStorage.setItem("user", JSON.stringify(response.data));
+const instance = axios.create({
+    baseURL: API_URL,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  
+  instance.interceptors.request.use(
+    (config) => {
+      const token = TokenService.getLocalAccessToken();
+      if (token) {
+        config.headers["Authorization"] = 'Bearer ' + token;  
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  
+  instance.interceptors.response.use(
+    (res) => {
+      return res;
+    },
+    async (err) => {
+      const originalConfig = err.config;
+  
+      if (originalConfig.url !== "/auth/signin" && err.response) {
+        // Access Token was expired
+        if (err.response.status === 401 && !originalConfig._retry) {
+          originalConfig._retry = true;
+          let user = JSON.parse(localStorage.getItem('user'))
+          try {
+            const rs = await instance.post("/auth/refreshtoken", {
+              refreshToken: TokenService.getLocalRefreshToken(),
+              email: user.email
+            });
+  
+            const { accessToken } = rs.data;
+            TokenService.updateLocalAccessToken(accessToken);
+  
+            return instance(originalConfig);
+          } catch (_error) {
+            return Promise.reject(_error);
+          }
         }
-      })
-      .catch((error) =>
-        console.log(error.response)
-      );
-    return res;
-
-
-  }
-
-  logout() {
-    localStorage.removeItem("user");
-  }
-
-  register(username, email, password) {
-    return axios.post(API_URL + "signup", {
-      username,
-      email,
-      password,
-    });
-  }
-}
-
-export default new ApiService();
+      }
+  
+      return Promise.reject(err);
+    }
+  );
+  
+  export default instance;

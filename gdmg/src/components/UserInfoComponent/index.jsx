@@ -1,9 +1,13 @@
 import React from 'react';
 import { IconLogout} from '@tabler/icons';
 import { UnstyledButton, Group, Avatar, Text, Box, useMantineTheme } from '@mantine/core';
+import AuthService from '../../service/auth/authService';
+import { useNavigate } from 'react-router-dom';
 
 export function UserInfoComponent(props) {
   const theme = useMantineTheme();
+  const session = AuthService.getCurrentUser();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -30,10 +34,10 @@ export function UserInfoComponent(props) {
           />
           <Box sx={{ flex: 1 }}>
             <Text size="sm" weight={500}>
-              Mock User
+              {session.surname} {session.name}
             </Text>
             <Text color="dimmed" size="xs">
-              mock@gmail.com
+              {session.email}
             </Text>
           </Box>
 
@@ -43,6 +47,10 @@ export function UserInfoComponent(props) {
                     backgroundColor:
                     theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
                 },
+            }}
+            onClick={() => {
+              AuthService.logout();
+              navigate("/");
             }}
           >
             <IconLogout size={18}/>

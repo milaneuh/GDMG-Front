@@ -16,8 +16,12 @@ import {
 } from '@mantine/core';
 import PasswordValidator from 'password-validator';
 import * as EmailValidator from 'email-validator';
+import { showNotification } from '@mantine/notifications';
 
 import { useNavigate } from 'react-router-dom';
+import { signUp } from '../../service/apiService';
+import { Utilisateur } from '../../models/Utilisateur';
+import AuthService from '../../service/auth/authService';
 
 export function SignUpForm(props) {
 const navigate = useNavigate();
@@ -52,7 +56,34 @@ const navigate = useNavigate();
   });
  
   const handleSubmit = async (event) => {
-     
+    console.log(form.values.name,form.values.surname);
+    let role = ['ROLE_USER'];
+    const validate = form.validate();
+    if(validate.hasErrors == false){
+        AuthService.register(
+          form.values.surname,
+          form.values.name,
+          form.values.email,
+          role,
+          form.values.password).then(
+            (res) =>{
+              showNotification({
+                color: 'green',
+                title: 'Votre compte a bien été crée',
+                autoClose: 5000,
+              })
+              navigate('/');
+            },
+            (error) =>{
+              showNotification({
+                color: 'red',
+                title: 'Impossible de vous inscrire',
+                message: 'Une erreur est survenue, veuillez vérifier que vous avez mis des identifiants correct',
+                autoClose: 5000,
+              })
+            } 
+          )
+     }
   }
 
   return (

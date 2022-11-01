@@ -1,24 +1,16 @@
 export class Utilisateur{
-    name;
     surname;
+    name;
     mail;
     password;
-    civilite;
-    telephone;
-    telephone2;
     role;
-    newsletter;
 
-   constructor(name,surname,mail,password,civilite,telephone,telephone2,role,newsletter){
+   constructor(surname,name,mail,password,role){
     this.name = name;
     this.surname = surname;
     this.mail = mail;
     this.password = password;
-    this.civilite = civilite;
-    this.telephone = telephone;
-    this.telephone2 = telephone2;
     this.role = role;
-    this.newsletter = newsletter;
    }
 
    getName(){

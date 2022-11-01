@@ -10,15 +10,18 @@ import {
   Button,
   Anchor,
   Stack,
-  Title
+  Title,
+  LoadingOverlay
 } from '@mantine/core';
 import PasswordValidator from 'password-validator';
 import * as EmailValidator from 'email-validator';
-import { redirect } from 'react-router-dom';
-import apiService from '../../service/apiService';
+import { login } from '../../service/apiService';
+import { showNotification } from '@mantine/notifications';
+import AuthService from '../../service/auth/authService';
 
 export function SignInForm(props) {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
 
   var schema = new PasswordValidator();
   schema
@@ -43,13 +46,27 @@ export function SignInForm(props) {
   });
  
   const handleSubmit = async (event) => {
+      setVisible(true);
       const validate = form.validate();
       if(validate.hasErrors == false){
-
-          const login = apiService.login(form.values.email,form.values.password);
-
-          
-      }
+        AuthService.login(form.values.email,form.values.password).then(
+          (res) => {
+            console.log(res);
+            navigate("/dashboard");
+            window.location.reload();
+          },
+          (error) => {
+            console.log(error.response);
+            setVisible(false);
+            showNotification({
+              color: 'red',
+              title: 'Impossible de vous connnecter',
+              message: 'Une erreur est survenue, veuillez vérifier que vous avez mis des identifiants correct',
+              autoClose: 5000,
+            })
+          }
+        )
+       }
   }
 
   return (
@@ -60,6 +77,7 @@ export function SignInForm(props) {
         Bienvenue sur le site Gestionnaire !
     </Title>
     <Paper radius="md" p="xl" withBorder {...props} shadow='md'>
+    <LoadingOverlay visible={visible} overlayBlur={2} />
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
             
