@@ -30,17 +30,22 @@ const instance = axios.create({
       const originalConfig = err.config;
   
       if (originalConfig.url !== "/auth/signin" && err.response) {
+        console.log("Token is expired");
         // Access Token was expired
         if (err.response.status === 401 && !originalConfig._retry) {
+          console.log("Trying to get a new token with the access token");
           originalConfig._retry = true;
           let user = JSON.parse(localStorage.getItem('user'))
           try {
-            const rs = await instance.post("/auth/refreshtoken", {
+            console.log(TokenService.getLocalRefreshToken());
+            console.log(TokenService.getLocalEmail());
+            const rs = await instance.post("/auth/refresh", {
               refreshToken: TokenService.getLocalRefreshToken(),
-              email: user.email
+              email: TokenService.getLocalEmail()
             });
   
             const { accessToken } = rs.data;
+            console.log(rs.data);
             TokenService.updateLocalAccessToken(accessToken);
   
             return instance(originalConfig);

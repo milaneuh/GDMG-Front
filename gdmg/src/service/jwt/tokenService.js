@@ -13,7 +13,12 @@ const getLocalRefreshToken = () => {
     user.token = token;
     localStorage.setItem("session", JSON.stringify(user));
   };
-  
+
+  const getLocalEmail = () =>{
+    const user = JSON.parse(localStorage.getItem("session"));
+    return user?.email;
+  }
+    
   const getUser = () => {
     return JSON.parse(localStorage.getItem("session"));
   };
@@ -34,6 +39,7 @@ const getLocalRefreshToken = () => {
     getUser,
     setUser,
     removeUser,
+    getLocalEmail
   };
   
   export default TokenService;
