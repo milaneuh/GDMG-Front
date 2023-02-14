@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack,Text,Group, ScrollArea, Grid, Title, Container, Divider, Button, SimpleGrid, Box, Space } from '@mantine/core';
+import { MediaQuery,Stack,Text,Group, ScrollArea, Grid, Title, Container, Divider, Button, SimpleGrid, Box, Space } from '@mantine/core';
 import { IconTrash,IconEdit } from '@tabler/icons';
 import ExpendedClientInfoComponent from '../ExpendedClientInfoComponent';
 import ExpendedResaInfoComponent from '../ExpendedResaInfoComponent';
@@ -28,7 +28,7 @@ function ExpandedRowComponent({children}) {
                 </Grid.Col>
             </Grid>
         </Container>
-      
+
     );
 }
 

@@ -17,17 +17,18 @@ function DataTableComponent() {
     useEffect(() => {
         ResaService.getAllResa()
         .then((res) => {
-          setData(res);
+          if(res !== undefined){
+            setData(res);
+          }else setData([])
         });
     },[])
     console.log(data);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[1]);
-
+        const [page, setPage] = useState(1);
     useEffect(() => {
       setPage(1);
     }, [pageSize]);
   
-    const [page, setPage] = useState(1);
     const [records, setRecords] = useState(sortBy(data.slice(0, pageSize),'nom'));
 
     useEffect(() => {

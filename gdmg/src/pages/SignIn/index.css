@@ -1,0 +1,16 @@
+#formContainer{
+    height: 100%;
+    background: #5D5FEF;
+}
+
+#form{
+    height: 100%;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 10px
+}
+@media screen and (max-width: 800px) {
+    #form{
+        background-color: white;
+    }
+}
